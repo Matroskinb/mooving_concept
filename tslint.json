@@ -1,0 +1,22 @@
+{
+    "extends": ["tslint:recommended", "tslint-config-prettier"],
+    "rules": {
+      "ban-types": [true, ["Object", "Use {} instead."], ["String"]],
+      "no-any": false,
+      "no-console": [true, "log", "warn"],
+      "object-literal-sort-keys": false,
+      "no-unused-variable": true,
+      "ordered-imports": [
+        true,
+        {
+          "import-sources-order": "any",
+          "grouped-imports": false,
+          "named-imports-order": "any",
+          "module-source-path": "full"
+        }
+      ]
+    },
+    "linterOptions": {
+      "exclude": ["node_modules/**/*.ts"]
+    }
+  }

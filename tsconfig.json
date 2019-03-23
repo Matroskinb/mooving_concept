@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "allowJs": true,
+        "module": "commonjs",
+        "target": "ES2015",
+        "noImplicitAny": false,
+        "watch": false,
+        "sourceMap": false,
+        "outDir": "./bin",
+        "lib":["es2016"]
+    },
+    "include": ["**/**.ts"],
+    "compileOnSave": true,
+    "exclude": [
+        "node_modules",
+        "!node_modules/@personal"
+    ]
+}
