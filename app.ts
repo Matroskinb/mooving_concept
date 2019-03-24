@@ -1,24 +1,20 @@
 import * as SocketIO from 'socket.io';
+import { RoomService } from './src/service/RoomService';
+import { SocketModel } from './src/model/SocketModel';
+import { IRoomTickInterface } from './src/interfaces/RoomInterfaces';
 
-const serverSocket = SocketIO();
+const serverSocket = SocketIO(3000);
+const roomService = new RoomService();
 
-const roomMessageCallback: Function = (socket: SocketIO.Socket) => (...args: any[]) => {
-    socket.to('__default_room').emit('socket message', {
-        socket_id: socket.id,
-        type: 'client_message',
-        payload: args
-    });
-};
+roomService.on('tick', (room: IRoomTickInterface): void => {
+    serverSocket.to(room.name).emit('room_state_changed', {
+        state: room.state,
+    })
+})
 
 serverSocket.on('connect', function(socket: SocketIO.Socket){
     console.log('New connection: ' + socket.id);
+    const socketModel = new SocketModel(socket);
     //подключаем юзера в команту
-    socket.join('__default_room', () => {
-        serverSocket.to('__default_room').emit('user connected', {
-            socket_id: socket.id,
-            type: 'server_message'
-        });
-    });
-    //принимаем сообщение
-    socket.on('room_message', roomMessageCallback(socket));
+    roomService.attachClient(socketModel);
 });
