@@ -21,6 +21,6 @@ roomService.on('clientConnected', (e: IRoomEvent): void => {
 serverSocket.on('connect', function(socket: SocketIO.Socket){
     console.log('New connection: ' + socket.id);
     const socketModel = new SocketModel(socket);
-    //подключаем юзера в команту
+    // подключаем юзера в команту
     roomService.attachClient(socketModel);
 });
