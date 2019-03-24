@@ -1,5 +1,6 @@
 import { PlayerPosition } from "../model/PlayerPosition";
 import { ICurrentPlayerPosition } from "./ClientInterfaces";
+import { PlayerModel } from "../model/PlayerModel";
 
 export interface IPlayerPosition {
     x: number,
@@ -17,7 +18,7 @@ export interface IPlayerState {
 }
 
 export interface IPlayers {
-    [s: string]: IPlayer,
+    [s: string]: PlayerModel,
 }
 
 export abstract class AbstractPlayerPosition {

@@ -8,22 +8,12 @@ export class SocketModel {
     public constructor(socket: SocketIO.Socket){
         this.socket = socket;
     }
-
-    public invitedInRoom(name: string){
-        this.socket.join(name, () => {
-            this.notifyRoomConnection(name);
-        });
+    
+    public connectedInRoom(payload: {}){
+        this.socket.emit('room_connected', payload);
     }
 
     public attachListener(eName: string, callback: (...args: any[]) => void){
         this.socket.on(eName, callback);
-    }
-
-    private notifyRoomConnection(name: string){
-        this.socket.emit('room_connected', {
-            room: {
-                name,
-            }
-        });
     }
 }

@@ -14,7 +14,7 @@ roomService.on('tick', (e: IRoomEvent): void => {
 
 roomService.on('clientConnected', (e: IRoomEvent): void => {
     serverSocket.to(e.name).emit('room_client_connected', {
-        client: e.client,
+        player: e.player,
     });
 });
 

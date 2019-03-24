@@ -3,6 +3,7 @@ import { RoomModel } from "../model/RoomModel";
 import { SocketModel } from "../model/SocketModel";
 import { EventEmitter } from "events";
 import { ICurrentPlayerPosition } from "../interfaces/ClientInterfaces";
+import { PlayerModel } from "../model/PlayerModel";
 
 export class RoomService {
     private name: string;
@@ -20,13 +21,16 @@ export class RoomService {
     }
 
     public attachClient(client: SocketModel){
-        client.invitedInRoom(this.name);
-        this.roomModel.attachPlayer(client.id);
-        this.dispatch('clientConnected', {name: this.name, client: {id: client.id}});
+        const player: PlayerModel = this.roomModel.attachPlayer(client.id);
+        const playerPayload = {name: this.name, client: {id: client.id}, player: player.getState() };
+        this.dispatch('clientConnected', playerPayload);
+        client.connectedInRoom(playerPayload);
         client.attachListener('client_position', (position: ICurrentPlayerPosition): void => {
             this.roomModel.updateUserPositionFromSocket(client.id, position);
         });
     }
+
+    
 
     public tick(){
         this.bus.emit('tick', {

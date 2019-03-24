@@ -8,5 +8,6 @@ export interface IRoomEvent extends IRoom {
     state?: IPlayerState[],
     client?: {
         id: string,
-    }
+    },
+    player?: IPlayerState,
 }
