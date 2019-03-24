@@ -4,13 +4,13 @@ import { SocketModel } from "../model/SocketModel";
 import { EventEmitter } from "events";
 
 export class RoomService {
-    private room: string;
+    private name: string;
     private roomModel : RoomModel;
     private bus: EventEmitter;
     private interval: NodeJS.Timeout;
 
     public constructor() {
-        this.room = this.getRoomName();
+        this.name = this.getRoomName();
         this.roomModel = new RoomModel();
         this.interval = setInterval(() => {
             this.tick();
@@ -19,14 +19,14 @@ export class RoomService {
     }
 
     public attachClient(client: SocketModel){
-        client.invitedInRoom(this.room);
+        client.invitedInRoom(this.name);
         this.roomModel.attachPlayer(client.id);
-        this.dispatch('clientAttached', {room: this.room, client});
+        this.dispatch('clientConnected', {name: this.name, client: {id: client.id}});
     }
 
     public tick(){
         this.bus.emit('tick', {
-            name: this.room,
+            name: this.name,
             state: this.roomModel.getState(),
         })
     }

@@ -12,6 +12,12 @@ roomService.on('tick', (room: IRoomTickInterface): void => {
     })
 })
 
+roomService.on('clientConnected', (payload): void => {
+    serverSocket.to(payload.name).emit('room_client_connected', {
+        client: payload.client,
+    });
+});
+
 serverSocket.on('connect', function(socket: SocketIO.Socket){
     console.log('New connection: ' + socket.id);
     const socketModel = new SocketModel(socket);

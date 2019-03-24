@@ -11,7 +11,15 @@ export class SocketModel {
 
     public invitedInRoom(name: string){
         this.socket.join(name, () => {
-            // callback
-        })
+            this.notifyRoomConnection(name);
+        });
+    }
+
+    private notifyRoomConnection(name: string){
+        this.socket.emit('room_connected', {
+            room: {
+                name,
+            }
+        });
     }
 }
