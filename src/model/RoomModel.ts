@@ -18,6 +18,12 @@ export class RoomModel {
         this.players[id].position.setFromSocket(position);
     }
 
+    public removePlayer(id: string){
+        if(this.players[id]){
+            delete this.players[id];
+        }
+    }
+
     public getState(): IPlayerState[] {
         return Object.values(this.players).map((player: PlayerModel) => player.getState());
     }

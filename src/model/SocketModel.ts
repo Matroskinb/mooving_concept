@@ -3,6 +3,7 @@ export class SocketModel {
     get id(){
         return this.socket.id;
     }
+    
     private socket: SocketIO.Socket;
 
     public constructor(socket: SocketIO.Socket){
@@ -15,5 +16,9 @@ export class SocketModel {
 
     public attachListener(eName: string, callback: (...args: any[]) => void){
         this.socket.on(eName, callback);
+    }
+
+    public removeListener(name: string, listener: (...args: any[])=> void){
+        this.socket.removeListener(name, listener);
     }
 }

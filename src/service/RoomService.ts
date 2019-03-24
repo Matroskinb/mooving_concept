@@ -23,14 +23,26 @@ export class RoomService {
     public attachClient(client: SocketModel){
         const player: PlayerModel = this.roomModel.attachPlayer(client.id);
         const playerPayload = {name: this.name, client: {id: client.id}, player: player.getState() };
+      
         this.dispatch('clientConnected', playerPayload);
+      
         client.connectedInRoom(playerPayload);
-        client.attachListener('client_position', (position: ICurrentPlayerPosition): void => {
-            this.roomModel.updateUserPositionFromSocket(client.id, position);
+        
+        client.attachListener('client_position', this.getPositionListener(client.id));
+
+        client.attachListener('disconnect', (): void => {
+            this.removePlayer(client);
         });
     }
 
-    
+    public removePlayer(client: SocketModel){
+        const id: string = client.id;
+
+        this.roomModel.removePlayer(id);
+        client.removeListener('client_position', this.getPositionListener(id));
+        
+        this.bus.emit('playerRemoved', {client: {id}});
+    }
 
     public tick(){
         this.bus.emit('tick', {
@@ -48,6 +60,10 @@ export class RoomService {
     private dispatch(eName: string, payload: {}){
         this.bus.emit(eName, payload);
     }
+
+    private getPositionListener = (clientId: string) => (position: ICurrentPlayerPosition): void => {
+        this.roomModel.updateUserPositionFromSocket(clientId, position);
+    };
 
     private getRoomName(): string {
         return 'ROOM';
