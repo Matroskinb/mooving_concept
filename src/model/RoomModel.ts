@@ -1,4 +1,4 @@
-import { IPlayer, IPlayerPosition, IPlayers } from "../interfaces/PlayerInterfaces";
+import { IPlayer, IPlayerPosition, IPlayers, IPlayerState } from "../interfaces/PlayerInterfaces";
 import { PlayerPosition } from "./PlayerPosition";
 import { ICurrentPlayerPosition } from "../interfaces/ClientInterfaces";
 
@@ -17,7 +17,7 @@ export class RoomModel {
         this.players[id].position.setFromSocket(position);
     }
 
-    public getState(): {} {
+    public getState(): IPlayerState[] {
         return Object.values(this.players).map((player: IPlayer) => ({
             id: player.id,
             position: player.position.getState(),

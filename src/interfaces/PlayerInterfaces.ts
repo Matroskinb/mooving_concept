@@ -11,6 +11,11 @@ export interface IPlayer {
     position: AbstractPlayerPosition
 }
 
+export interface IPlayerState {
+    id: string,
+    position: IPlayerPosition
+}
+
 export interface IPlayers {
     [s: string]: IPlayer,
 }
