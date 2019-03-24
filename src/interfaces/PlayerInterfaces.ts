@@ -1,6 +1,7 @@
 import { PositionState } from "../model/PlayerPosition";
 import { ICurrentPlayerPosition } from "./ClientInterfaces";
 import { PlayerModel } from "../model/PlayerModel";
+import { PositionAbstract } from "../abstract/PositionAbstract";
 
 export interface IPositionState {
     x: number,
@@ -9,7 +10,7 @@ export interface IPositionState {
 
 export interface IPlayer {
     id: string,
-    position: AbstractPlayerPosition
+    position: PositionAbstract
 }
 
 export interface IPlayerState {
@@ -21,8 +22,3 @@ export interface IPlayers {
     [s: string]: PlayerModel,
 }
 
-export abstract class AbstractPlayerPosition {
-    public abstract setFromSocket(position: ICurrentPlayerPosition): PositionState;
-
-    public abstract getState();
-}

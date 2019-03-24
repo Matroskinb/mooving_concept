@@ -15,7 +15,7 @@ export class RoomModel {
     }
 
     public updatePlayerPositionFromSocket(id: string, position: ICurrentPlayerPosition) {
-        this.players[id].position.setFromSocket(position);
+        this.players[id].setPosition(position.x_pos, position.y_pos);
     }
 
     public removePlayer(id: string){
