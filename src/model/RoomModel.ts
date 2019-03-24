@@ -1,5 +1,5 @@
-import { IPlayer, IPlayerPosition, IPlayers, IPlayerState } from "../interfaces/PlayerInterfaces";
-import { PlayerPosition } from "./PlayerPosition";
+import { IPlayers, IPlayerState } from "../interfaces/PlayerInterfaces";
+
 import { ICurrentPlayerPosition } from "../interfaces/ClientInterfaces";
 import { PlayerModel } from "./PlayerModel";
 
@@ -14,7 +14,7 @@ export class RoomModel {
         return player;
     }
 
-    public updateUserPositionFromSocket(id: string, position: ICurrentPlayerPosition) {
+    public updatePlayerPositionFromSocket(id: string, position: ICurrentPlayerPosition) {
         this.players[id].position.setFromSocket(position);
     }
 

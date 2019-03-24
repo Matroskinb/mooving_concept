@@ -1,21 +1,27 @@
-import { IPlayerPosition, AbstractPlayerPosition } from "../interfaces/PlayerInterfaces";
+import { IPositionState, AbstractPlayerPosition as AbstractPositionState } from "../interfaces/PlayerInterfaces";
 import { ICurrentPlayerPosition } from "../interfaces/ClientInterfaces";
 
-export class PlayerPosition implements AbstractPlayerPosition {
+export class PositionState implements AbstractPositionState {
 
-    protected position: IPlayerPosition = {
-        x: 0,
-        y: 0,
-    };
+    protected x: number;
+    protected y: number;
 
-    public setFromSocket(position: ICurrentPlayerPosition): PlayerPosition {
-        this.position.x = position.x_pos;
-        this.position.y = position.y_pos;
+    public setFromSocket(position: ICurrentPlayerPosition): PositionState {
+        this.x = position.x_pos;
+        this.y = position.y_pos;
 
         return this;
     }
 
+    public setState(x: number, y:number): void {
+        this.x = x;
+        this.y = y;
+    }
+
     public getState(){
-        return this.position;
+        return {
+            x: this.x,
+            y: this.y,
+        };
     }
 }

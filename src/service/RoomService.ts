@@ -7,7 +7,7 @@ import { PlayerModel } from "../model/PlayerModel";
 
 export class RoomService {
     private name: string;
-    private roomModel : RoomModel;
+    private roomModel: RoomModel;
     private bus: EventEmitter;
     private interval: NodeJS.Timeout;
 
@@ -20,14 +20,19 @@ export class RoomService {
         this.bus = new EventEmitter();
     }
 
-    public attachClient(client: SocketModel){
+    public attachClient(client: SocketModel) {
         const player: PlayerModel = this.roomModel.attachPlayer(client.id);
-        const playerPayload = {name: this.name, client: {id: client.id}, player: player.getState() };
-      
-        this.dispatch('clientConnected', playerPayload);
-      
+        const playerPayload = { room: { name: this.name }, player: player.getState() };
+
+        client.inviteInRoom(this.name);
+
+        this.dispatch('clientConnected', {
+            player: playerPayload,
+            state: this.roomModel.getState(),
+        });
+
         client.connectedInRoom(playerPayload);
-        
+
         client.attachListener('client_position', this.getPositionListener(client.id));
 
         client.attachListener('disconnect', (): void => {
@@ -35,34 +40,46 @@ export class RoomService {
         });
     }
 
-    public removePlayer(client: SocketModel){
+    public removePlayer(client: SocketModel) {
         const id: string = client.id;
 
         this.roomModel.removePlayer(id);
         client.removeListener('client_position', this.getPositionListener(id));
-        
-        this.bus.emit('playerRemoved', {client: {id}});
+
+        this.bus.emit('playerRemoved', { client: { id } });
     }
 
-    public tick(){
+    public tick() {
         this.bus.emit('tick', {
             name: this.name,
             state: this.roomModel.getState(),
         })
     }
 
-    public on(eName: string, callback: (...args:any[]) => any): RoomService {
+    public closeRoom(): void {
+        clearInterval(this.interval);
+
+        this.bus.emit('roomClosed', {room: this.getRoomInfo()});
+    }
+
+    public on(eName: string, callback: (...args: any[]) => any): RoomService {
         this.bus.addListener(eName, callback);
 
         return this;
     }
 
-    private dispatch(eName: string, payload: {}){
+    public getRoomInfo(){
+        return {
+            name: this.name,
+        }
+    }
+
+    private dispatch(eName: string, payload: any) {
         this.bus.emit(eName, payload);
     }
 
     private getPositionListener = (clientId: string) => (position: ICurrentPlayerPosition): void => {
-        this.roomModel.updateUserPositionFromSocket(clientId, position);
+        this.roomModel.updatePlayerPositionFromSocket(clientId, position);
     };
 
     private getRoomName(): string {

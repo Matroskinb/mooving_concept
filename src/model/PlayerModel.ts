@@ -1,15 +1,20 @@
-import { PlayerPosition } from "./PlayerPosition";
-import { IPlayerState } from "../interfaces/PlayerInterfaces";
+import { PositionState } from "./PlayerPosition";
+import { IPlayerState, IPositionState } from "../interfaces/PlayerInterfaces";
+import { PositionableAbstract } from "../abstract/PositionableAbstract";
+import { HealthableAbstract } from "../abstract/HealthableAbstract";
 
-export class PlayerModel {
-    public position: PlayerPosition;
+export class PlayerModel extends PositionableAbstract {
+    public position: PositionState;
+    protected health: number;
     protected id: string;
 
     constructor(id: string){
-        this.id = id;
-        this.position = new PlayerPosition();
-    }
+        super();
 
+        this.id = id;
+        this.position = new PositionState();
+    }
+    
     public getState(): IPlayerState{
         return {
             id: this.id,
